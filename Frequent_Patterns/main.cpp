@@ -10,15 +10,13 @@
 #include <cstdio>
 #include <sstream>
 #include <vector>
-#include <stack>
-#include <thread>
 #include <algorithm>
 #include <iomanip>
 #include <fstream>
 #include <ctime>
 
 using namespace std;
-float min_sup =0;
+double min_sup =0;
 class node{
 public:
     int item;
@@ -97,7 +95,7 @@ public:
 int mining(tree fptree,vector<int>pattern);
 vector<pair<vector<int>,int>> output;
 
-int main(void)
+int main(int argc, char** argv)
 {
     time_t t1 = clock();
     
@@ -105,7 +103,7 @@ int main(void)
     int max=0;
     memset(HTable,0,sizeof(HTable));
     FILE *fPtr;
-    fPtr = freopen("sample2.in","r", stdin);
+    fPtr = freopen(argv[2],"r", stdin);
     int trans=0;
     vector<vector<int>> transactions;
     string line;
@@ -125,6 +123,8 @@ int main(void)
         }
         transactions.push_back(arr);
     }
+    min_sup=(trans)*atof(argv[1]);
+    //cout << min_sup <<endl;
     vector<pair<int,vector<int>>> sort(max+1);
     for (int i=0; i<1000; i++) {
         
@@ -159,7 +159,7 @@ int main(void)
          for (auto itt = it->begin(); itt != it->end(); itt++) {
          }
     }
-    min_sup=trans*0.1;
+
     tree fptree(HeaderTable);
     
     
@@ -193,7 +193,7 @@ int main(void)
         }
     } );
     
-    ofstream myfile ("example.txt");
+    ofstream myfile (argv[3]);
     if (myfile.is_open())
     {
         for (auto it = output.begin(); it != output.end(); it++) {
@@ -237,8 +237,10 @@ void printConditionalPatternBases(vector<pair<pair<int,vector<pair<vector<int>, 
         cout << endl;
     }
 }
-int c=0;
+//int c=0;
+//int a=0;
 int mining(tree fptree, vector<int>pattern){
+    //cout << a++ <<endl;
     /*
     cout <<"---------------------------start mining--------------------------"<<endl;
     cout << "pattern : " ;
@@ -288,7 +290,7 @@ int mining(tree fptree, vector<int>pattern){
                 node = leaves->parent;
             }
         }
-        std::sort(list.begin(), list.end(), [](const pair<int,int>& a, const pair<int,int>& b){ if (a.second > b.second)return true;else return false;});
+        sort(list.begin(), list.end(), [](const pair<int,int>& a, const pair<int,int>& b){ if (a.second > b.second)return true;else return false;});
         ConditionalPatternBases.push_back(make_pair(make_pair((*it).first.first, paths), list));
         
         vector<int> pat;
@@ -323,7 +325,6 @@ int mining(tree fptree, vector<int>pattern){
                             }
                         }
                     }
-                    
                     for ( int i =0;  i<itt->second; i++) {
                         cfptree.growth(&cfptree.root, sorted_transaction, 0);
                     }
